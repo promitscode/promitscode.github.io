@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canada–U.S. Tariff Tracker</title>
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --panel: #ffffff;
+      --text: #111111;
+      --muted: #666666;
+      --line: #e5e5e0;
+      --accent: #1f3a5f;
+      --accent-soft: #eef3f8;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      --radius: 18px;
+      --max: 1100px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    header {
+      padding: 20px 0 30px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .intro {
+      max-width: 760px;
+      font-size: 1rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 14px;
+      margin: 26px 0 18px;
+    }
+
+    .control {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .control label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .control input,
+    .control select {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .summary-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .reset-btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 22px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .date-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .country-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f2f2f0;
+      color: #333333;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .action {
+      margin: 0 0 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .details {
+      display: grid;
+      gap: 12px;
+      padding-top: 6px;
+      border-top: 1px solid var(--line);
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-top: 2px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .empty-state {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    footer {
+      margin-top: 36px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Policy timeline</div>
+      <h1>Canada–U.S. Tariff Tracker</h1>
+      <p class="intro">
+        A clean, searchable timeline of tariff-related actions, retaliation, statements and trade-policy developments involving Canada and the United States.
+      </p>
+    </header>
+
+    <section class="controls">
+      <div class="control">
+        <label for="searchInput">Search</label>
+        <input id="searchInput" type="text" placeholder="Search actions, sectors, statements..." />
+      </div>
+
+      <div class="control">
+        <label for="countryFilter">Country</label>
+        <select id="countryFilter">
+          <option value="all">All countries</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="sectorFilter">Sector</label>
+        <select id="sectorFilter">
+          <option value="all">All sectors</option>
+        </select>
+      </div>
+    </section>
+
+    <div class="summary-bar">
+      <div id="resultsCount">0 events</div>
+      <button class="reset-btn" id="resetBtn">Reset filters</button>
+    </div>
+
+    <main id="timeline" class="timeline"></main>
+
+    <footer>
+      Built as a simple static site so you can update it later by editing only the data section in this file.
+    </footer>
+  </div>
+
+  <script>
+    // =========================================================
+    // DATA SECTION
+    // This is the only section you need to edit in future.
+    // To add a new event, copy one object, paste it at the top,
+    // and change the details.
+    // =========================================================
+    const tariffEvents = [
+      {
+        date: "2026-02-24",
+        country: "United States",
+        action: "Trump imposed a 10% universal tariff under a different piece of legislation, expiring at the end of 150 days unless Congress approves it; the note says this effectively reduced the fentanyl tariff on Canada from 35% to 10%.",
+        sectors: "Universal tariff; fentanyl-related tariffs",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2026-02-20",
+        country: "United States",
+        action: "The Supreme Court struck down Trump’s use of emergency power under the IEEPA Act to impose tariffs on countries; the note says this benefits Canada only to the extent it was exposed to emergency fentanyl tariffs and not getting USMCA exemption.",
+        sectors: "Fentanyl-related tariffs; USMCA exemption issues",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-12-08",
+        country: "United States",
+        action: "Trump threatened tariffs on Canadian fertilizers.",
+        sectors: "Fertilizers",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-11-26",
+        country: "Canada",
+        action: "Canada unveiled more measures to protect tariff-hit steel and lumber sectors.",
+        sectors: "Steel; lumber",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-10-24",
+        country: "United States",
+        action: "Trump suspended all trade talks with Canada over the Ontario government’s Reagan ad.",
+        sectors: "Trade talks",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-10-22",
+        country: "Canada",
+        action: "Carney addressed students and outlined details from the upcoming budget.",
+        sectors: "Trade diversification; non-U.S. trade",
+        statement: "PMO speech pledging to double non-U.S. trade by 2035.",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-10-07",
+        country: "Canada; United States",
+        action: "Prime Minister Mark Carney met President Donald Trump in the Oval Office.",
+        sectors: "Not specified in source",
+        statement: "Trump promised trade fairness for Canada and was noncommittal on a USMCA deal.",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-09-29",
+        country: "United States",
+        action: "Trump imposed an additional 10% tariff on Canadian softwood lumber, to take effect on Oct. 14, raising total levies to more than 45% during the escalating trade war.",
+        sectors: "Softwood lumber",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-09-05",
+        country: "Canada",
+        action: "The government scrapped the EV mandate and offered a C$5 billion fund to help people in sectors impacted by tariffs, along with more measures.",
+        sectors: "EVs; tariff-impacted sectors not otherwise specified",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-08-29",
+        country: "United States",
+        action: "U.S. tariff exemptions for package shipments valued under USD $800 ended.",
+        sectors: "Package shipments under USD $800",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-08-22",
+        country: "Canada",
+        action: "PM Carney announced the removal of all counter tariffs on the U.S. except those on steel, aluminum and autos.",
+        sectors: "Steel; aluminum; autos",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-08-05",
+        country: "Canada",
+        action: "Carney announced support for softwood lumber in British Columbia; the government announced C$1.2 billion in support for the industry.",
+        sectors: "Softwood lumber",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-08-01",
+        country: "Canada",
+        action: "PM Carney said the government would act to protect affected jobs.",
+        sectors: "Affected jobs; tariff-affected sectors not specified",
+        statement: "Carney’s statement",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-07-31",
+        country: "United States",
+        action: "Trump signed an executive order hiking tariffs to 35% on Canada on products not USMCA compliant from Aug. 1, effectively increasing the fentanyl tariffs from 25% to 35%.",
+        sectors: "Non-USMCA-compliant products; fentanyl-related tariffs",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-07-30",
+        country: "United States",
+        action: "Trump said a 50% tariff on copper pipes and wiring would take effect on Aug. 1.",
+        sectors: "Copper pipes; copper wiring",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-07-26",
+        country: "United States",
+        action: "The U.S. Commerce Department moved to raise anti-dumping duties on Canadian softwood lumber to 20.56%.",
+        sectors: "Softwood lumber",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-07-16",
+        country: "Canada",
+        action: "Canada announced new measures to strengthen Canada’s steel industry, reducing the quota for imports from countries without free trade agreements to 50% of 2024 levels and imposing a 50% tariff on imports above the quota.",
+        sectors: "Steel; foreign steel imports",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-07-10",
+        country: "United States",
+        action: "Trump announced 35% tariffs on Canada, to be implemented from Aug. 1, and said he was eyeing 15%-20% tariffs for others.",
+        sectors: "Canadian goods; tariffs on Canada",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-06-29",
+        country: "Canada",
+        action: "Canada rescinded the digital services tax to advance broader trade negotiations with the United States.",
+        sectors: "Digital services tax",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-06-28",
+        country: "Canada",
+        action: "Canada issued a Finance and G7 statement on global taxation and relief for the U.S.; as G7 chair, Canada announced a side-by-side system of U.S. taxation after the Big Beautiful Bill removed section 899.",
+        sectors: "Global taxation",
+        statement: "Finance and G7 statement on global taxation and relief for the U.S.",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-06-27",
+        country: "United States",
+        action: "Trump suspended trade talks with Canada over Canada’s Digital Services Tax, which was supposed to start collecting money from July 1.",
+        sectors: "Digital services tax",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-06-19",
+        country: "Canada",
+        action: "Canada said it would slap more tariffs on U.S. steel and aluminum if no deal was reached by July 21, and also announced measures to support those sectors.",
+        sectors: "Steel; aluminum",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-06-16",
+        country: "Canada; United States",
+        action: "PM Carney met President Trump at the G7; both announced a trade deal in the next 30 days.",
+        sectors: "Not specified in source",
+        statement: "Both announced a trade deal in the next 30 days.",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-06-04",
+        country: "United States",
+        action: "U.S. hiked tariffs on steel and aluminum by 50%.",
+        sectors: "Steel; aluminum",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-05-06",
+        country: "Canada; United States",
+        action: "Carney visited the White House for the first time.",
+        sectors: "Not specified in source",
+        statement: "Carney stressed Canada will never be for sale in his first meeting with Trump.",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-04-29",
+        country: "United States",
+        action: "Trump signed an order to remove tariffs on auto parts after industry pressure.",
+        sectors: "Auto parts",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-04-09",
+        country: "Canada",
+        action: "Canada’s retaliatory tariffs on U.S. autos took effect.",
+        sectors: "Autos",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-04-03",
+        country: "Canada",
+        action: "Canada imposed 25% tariffs on non-CUSMA-compliant vehicles imported into Canada from the United States, and on non-Canadian and non-Mexican content of CUSMA-compliant vehicles imported into Canada from the United States.",
+        sectors: "Vehicles; automobiles",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-04-02",
+        country: "United States",
+        action: "Tariffs on automobiles came into effect.",
+        sectors: "Automobiles",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-26",
+        country: "United States",
+        action: "Trump signed an executive order to impose 25% tariffs on all automobile imports to the United States, to be implemented from April 2. For automobiles imported under CUSMA, only the value of content not made in the United States would be tariffed.",
+        sectors: "Automobiles",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-13",
+        country: "Canada",
+        action: "Canada imposed 25% reciprocal tariffs on products totalling $29.8 billion.",
+        sectors: "Steel; aluminum; tools; computers and servers; display monitors; sport equipment; cast-iron products",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-12",
+        country: "United States",
+        action: "U.S. tariffs on steel and aluminum went into effect on other countries and Canada.",
+        sectors: "Steel; aluminum",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-10",
+        country: "Canada",
+        action: "Ontario imposed a 25% surcharge on energy sold to the U.S., primarily to three states; on March 11, Ford suspended the surcharge after meeting with Lutnick.",
+        sectors: "Energy",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-06",
+        country: "United States; Canada",
+        action: "The U.S. exempted imports compliant with USMCA/CUSMA from tariffs; Canada dropped retaliation.",
+        sectors: "USMCA/CUSMA-compliant imports",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-05",
+        country: "Canada",
+        action: "Some Canadian provinces removed U.S. alcohol from shelves.",
+        sectors: "U.S. alcohol",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-03-04",
+        country: "United States; Canada",
+        action: "U.S. tariffs took effect: 25% on Canadian exports and 10% on Canadian energy product exports. Canada retaliated with tariffs on $30 billion in goods imported from the U.S.",
+        sectors: "Canadian exports; energy products; orange juice; peanut butter; wine; spirits; beer; coffee; appliances; apparel; footwear; motorcycles; cosmetics; certain paper products",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-02-10",
+        country: "United States",
+        action: "President Donald Trump signed two executive orders imposing a 25% tariff, starting March 12, 2025, on imports of steel and aluminum products from all countries, including Canada.",
+        sectors: "Steel; aluminum",
+        statement: "Orders cited 'national security' and said they were meant to protect and revitalize U.S. domestic steel and aluminum industries and achieve 'sustainable capacity utilization of at least 80%.'",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-02-03",
+        country: "United States; Canada",
+        action: "Tariffs on Canada were paused for 30 days; Canada paused retaliation.",
+        sectors: "Not specified in source",
+        statement: "Not specified in source",
+        link: "Link not provided in source"
+      },
+      {
+        date: "2025-02-01",
+        country: "United States; Canada",
+        action: "U.S. set 10% tariffs on Canadian goods to take effect from Feb. 4; Trudeau held a press conference on retaliatory measures.",
+        sectors: "Canadian goods",
+        statement: "Trudeau press conference on retaliatory measures",
+        link: "Link not provided in source"
+      }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const countryFilter = document.getElementById("countryFilter");
+    const sectorFilter = document.getElementById("sectorFilter");
+    const resetBtn = document.getElementById("resetBtn");
+    const timeline = document.getElementById("timeline");
+    const resultsCount = document.getElementById("resultsCount");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr + "T00:00:00");
+      if (Number.isNaN(date.getTime())) return dateStr;
+      return date.toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    function normalizePieces(value) {
+      if (!value || value === "Not specified in source") return [];
+      return value
+        .split(";")
+        .map(part => part.trim())
+        .filter(Boolean);
+    }
+
+    function getUniqueCountries(events) {
+      const set = new Set();
+      events.forEach(event => {
+        event.country.split(";").map(v => v.trim()).filter(Boolean).forEach(v => set.add(v));
+      });
+      return Array.from(set).sort();
+    }
+
+    function getUniqueSectors(events) {
+      const set = new Set();
+      events.forEach(event => {
+        normalizePieces(event.sectors).forEach(v => set.add(v));
+      });
+      return Array.from(set).sort((a, b) => a.localeCompare(b));
+    }
+
+    function populateFilters() {
+      getUniqueCountries(tariffEvents).forEach(country => {
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        countryFilter.appendChild(option);
+      });
+
+      getUniqueSectors(tariffEvents).forEach(sector => {
+        const option = document.createElement("option");
+        option.value = sector;
+        option.textContent = sector;
+        sectorFilter.appendChild(option);
+      });
+    }
+
+    function matchesCountry(event, selectedCountry) {
+      if (selectedCountry === "all") return true;
+      return event.country
+        .split(";")
+        .map(v => v.trim())
+        .includes(selectedCountry);
+    }
+
+    function matchesSector(event, selectedSector) {
+      if (selectedSector === "all") return true;
+      return normalizePieces(event.sectors).includes(selectedSector);
+    }
+
+    function matchesSearch(event, query) {
+      if (!query) return true;
+      const haystack = [
+        event.date,
+        event.country,
+        event.action,
+        event.sectors,
+        event.statement,
+        event.link
+      ].join(" ").toLowerCase();
+
+      return haystack.includes(query.toLowerCase());
+    }
+
+    function sortNewestFirst(events) {
+      return [...events].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    function renderEvents() {
+      const query = searchInput.value.trim();
+      const selectedCountry = countryFilter.value;
+      const selectedSector = sectorFilter.value;
+
+      const filtered = sortNewestFirst(tariffEvents).filter(event => {
+        return (
+          matchesCountry(event, selectedCountry) &&
+          matchesSector(event, selectedSector) &&
+          matchesSearch(event, query)
+        );
+      });
+
+      resultsCount.textContent = `${filtered.length} event${filtered.length === 1 ? "" : "s"}`;
+
+      if (!filtered.length) {
+        timeline.innerHTML = `
+          <div class="empty-state">
+            No events match your current search or filter settings.
+          </div>
+        `;
+        return;
+      }
+
+      timeline.innerHTML = filtered.map(event => {
+        const safeDate = escapeHtml(formatDate(event.date));
+        const safeCountry = escapeHtml(event.country);
+        const safeAction = escapeHtml(event.action);
+        const safeSectors = escapeHtml(event.sectors || "Not specified in source");
+        const safeStatement = escapeHtml(event.statement || "Not specified in source");
+
+        const linkHtml = event.link && event.link !== "Link not provided in source"
+          ? `<a href="${escapeHtml(event.link)}" target="_blank" rel="noopener noreferrer">Open source link</a>`
+          : `No source link provided in original file`;
+
+        return `
+          <article class="card">
+            <div class="meta">
+              <span class="date-pill">${safeDate}</span>
+              <span class="country-pill">${safeCountry}</span>
+            </div>
+
+            <p class="action">${safeAction}</p>
+
+            <div class="details">
+              <div class="detail-row">
+                <div class="detail-label">Impacted sectors</div>
+                <div class="detail-value">${safeSectors}</div>
+              </div>
+
+              <div class="detail-row">
+                <div class="detail-label">Government statement</div>
+                <div class="detail-value">${safeStatement}</div>
+              </div>
+
+              <div class="detail-row">
+                <div class="detail-label">Reuters / media link</div>
+                <div class="detail-value">${linkHtml}</div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function resetFilters() {
+      searchInput.value = "";
+      countryFilter.value = "all";
+      sectorFilter.value = "all";
+      renderEvents();
+    }
+
+    populateFilters();
+    renderEvents();
+
+    searchInput.addEventListener("input", renderEvents);
+    countryFilter.addEventListener("change", renderEvents);
+    sectorFilter.addEventListener("change", renderEvents);
+    resetBtn.addEventListener("click", resetFilters);
+  </script>
+</body>
+</html>
