@@ -14,7 +14,7 @@
       --line: #e7e7e2;
       --shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
       --radius: 18px;
-      --max: 1160px;
+      --max: 1240px;
       --accent-blue: #214e8a;
       --accent-orange: #c96a1b;
       --accent-red: #b42318;
@@ -71,11 +71,17 @@
     }
 
     h1 {
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       font-size: clamp(2rem, 5vw, 4rem);
       line-height: 1.02;
       letter-spacing: -0.04em;
       max-width: 900px;
+    }
+
+    .last-updated {
+      font-size: 13px;
+      color: #888;
+      margin: 0 0 12px;
     }
 
     .intro {
@@ -87,9 +93,10 @@
 
     .controls {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 14px;
       margin: 0 0 14px;
+      align-items: stretch;
     }
 
     .control {
@@ -98,6 +105,7 @@
       border-radius: 16px;
       padding: 12px 14px;
       box-shadow: var(--shadow);
+      min-width: 0;
     }
 
     .control label {
@@ -274,18 +282,11 @@
       color: var(--muted);
       font-size: 13px;
     }
-.tracker-context {
-  max-width: 700px;
-  margin: 10px auto 10px auto;
-  font-size: 15px;
-  color: #555;
-}
 
-.last-updated {
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 14px;
-}
+    @media (max-width: 980px) {
+      .controls { grid-template-columns: 1fr 1fr; }
+    }
+
     @media (max-width: 880px) {
       .controls { grid-template-columns: 1fr; }
       .detail-row { grid-template-columns: 1fr; gap: 4px; }
@@ -300,17 +301,14 @@
     <header>
       <div class="eyebrow">Policy timeline</div>
       <h1>Canada–U.S. Tariff Tracker</h1>
-<p class="tracker-context">
-A timeline of tariff actions, retaliation measures and trade policy developments between Canada and the United States.
-</p>
 
-<p class="last-updated">
-Last updated: March 2026
-</p>
+      <p class="last-updated">
+        Last updated: March 2026
+      </p>
 
-<p class="intro">
-A clean, searchable timeline of tariff-related actions, retaliation, official statements, and trade-policy developments involving Canada and the United States.
-</p>
+      <p class="intro">
+        A clean, searchable timeline of tariff-related actions, retaliation, official statements, and trade-policy developments involving Canada and the United States.
+      </p>
     </header>
 
     <section class="controls">
@@ -332,12 +330,13 @@ A clean, searchable timeline of tariff-related actions, retaliation, official st
           <option value="all">All sectors</option>
         </select>
       </div>
-<div class="control">
-<label for="yearFilter">Year</label>
-<select id="yearFilter">
-<option value="all">All years</option>
-</select>
-</div>
+
+      <div class="control">
+        <label for="yearFilter">Year</label>
+        <select id="yearFilter">
+          <option value="all">All years</option>
+        </select>
+      </div>
     </section>
 
     <div class="action-row">
@@ -357,117 +356,104 @@ A clean, searchable timeline of tariff-related actions, retaliation, official st
   </div>
 
   <script>
-    // =========================================================
-    // DATA SECTION
-    // Edit only this part when you want to add or update events.
-    //
-    // IMPORTANT:
-    // 1) This file accepts BOTH old and new formats.
-    // 2) Old format example:
-    //    statement: "Not specified in source"
-    //    link: "Link not provided in source"
-    // 3) New clickable format example:
-    //    statement: { text: "Carney statement", url: "https://..." }
-    //    link: { text: "Reuters story", url: "https://..." }
-    // =========================================================
     const tariffEvents = [
-{
+      {
         date: "2026-03-11",
         country: "United States",
         action: "President Donald Trump's administration launched Section 301 investigations relating to structural excess Capacity and production in manufacturing sectors",
         sectors: "Not specified",
         statement: {
-text: "Two new investigations under Section 301",
-url: "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/march/ustr-initiates-section-301-investigations-relating-structural-excess-capacity-and-production"
+          text: "Two new investigations under Section 301",
+          url: "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/march/ustr-initiates-section-301-investigations-relating-structural-excess-capacity-and-production"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/china/us-opens-new-unfair-trade-probes-rebuild-trumps-tariff-pressure-2026-03-11/"
+        }
       },
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/china/us-opens-new-unfair-trade-probes-rebuild-trumps-tariff-pressure-2026-03-11/"
-}
-},   
-{
+      {
         date: "2026-02-24",
         country: "United States",
         action: "Trump imposed a 10% universal tariff under a different piece of legislation, expiring at the end of 150 days unless Congress approves it; the note says this effectively reduced the fentanyl tariff on Canada from 35% to 10%",
         sectors: "Universal tariff; fentanyl-related tariffs",
         statement: {
-text: "Trump imposes 10% tariffs under Section 122 to replace IEEPA tariffs",
-url: "https://content.govdelivery.com/bulletins/gd/USDHSCBP-40b3b7b?wgt_ref=USDHSCBP_WIDGET_2"
+          text: "Trump imposes 10% tariffs under Section 122 to replace IEEPA tariffs",
+          url: "https://content.govdelivery.com/bulletins/gd/USDHSCBP-40b3b7b?wgt_ref=USDHSCBP_WIDGET_2"
+        },
+        link: {
+          text: "New tariffs at 10%, could go up to 15%",
+          url: "https://www.reuters.com/business/new-us-tariffs-come-lower-10-rate-2026-02-24/"
+        }
       },
-link: {
-text: "New tariffs at 10%, could go up to 15%",
-url: "https://www.reuters.com/business/new-us-tariffs-come-lower-10-rate-2026-02-24/"
-}
-},
       {
         date: "2026-02-20",
         country: "United States",
         action: "The Supreme Court struck down Trump’s use of emergency power under the IEEPA Act to impose tariffs on countries; the note says this benefits Canada only to the extent it was exposed to emergency fentanyl tariffs and not getting USMCA exemption.",
         sectors: "Fentanyl-related tariffs; USMCA exemption issues",
         statement: {
-text: "Supreme Court order",
-url: "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf"
+          text: "Supreme Court order",
+          url: "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/legal/government/us-supreme-court-rejects-trumps-global-tariffs-2026-02-20/"
+        }
       },
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/legal/government/us-supreme-court-rejects-trumps-global-tariffs-2026-02-20/"
-}
-},
       {
         date: "2025-12-08",
         country: "United States",
         action: "Trump threatened tariffs on Canadian fertilizers.",
         sectors: "Fertilizers",
         statement: {
-text: "Not specified in source",
-url: ""
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Reuters video",
+          url: "https://www.reuters.com/video/watch/idRW833508122025RP1/"
+        }
       },
-link: {
-text: "Reuters video",
-url: "https://www.reuters.com/video/watch/idRW833508122025RP1/"
-}
-},
       {
         date: "2025-11-26",
         country: "Canada",
         action: "Canada unveiled more measures to protect tariff-hit steel and lumber sectors.",
         sectors: "Steel; lumber",
         statement: {
-text: "PMO statement",
-url: "https://www.pm.gc.ca/en/news/backgrounders/2025/11/26/prime-minister-announces-new-measures-protect-and-transform-canadas"
+          text: "PMO statement",
+          url: "https://www.pm.gc.ca/en/news/backgrounders/2025/11/26/prime-minister-announces-new-measures-protect-and-transform-canadas"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/china/canada-unveils-more-measures-protect-tariff-hit-steel-lumber-sectors-2025-11-26/"
+        }
       },
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/china/canada-unveils-more-measures-protect-tariff-hit-steel-lumber-sectors-2025-11-26/"
-}
-},
       {
         date: "2025-10-24",
         country: "United States",
         action: "Trump suspended all trade talks with Canada over the Ontario government’s Reagan ad.",
         sectors: "Trade talks",
         statement: {
-text: "Not specified in source",
-url: ""
-	},
-link: {
-text: "Reuters story on Carney ready to resume Canada-US trade talks",
-url: "https://www.reuters.com/world/us/trump-says-all-trade-talks-with-canada-are-terminated-2025-10-24/"
-}
-},
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Reuters story on Carney ready to resume Canada-US trade talks",
+          url: "https://www.reuters.com/world/us/trump-says-all-trade-talks-with-canada-are-terminated-2025-10-24/"
+        }
+      },
       {
         date: "2025-10-22",
         country: "Canada",
         action: "Carney addressed students and outlined details from the upcoming budget.",
         sectors: "Trade diversification; non-U.S. trade",
         statement: {
-text: "PM Carney's speech",
-url: "https://www.pm.gc.ca/en/news/speeches/2025/10/22/prime-ministers-live-address-canadas-plan-build-stronger-economy-advance"
-	},
-link: {
-text: "Canada plans to double non-US trade over the next decade",
-url: "https://www.reuters.com/world/americas/canadas-carney-make-unusual-televised-address-budget-amid-deficit-scrutiny-2025-10-22/"
-}
+          text: "PM Carney's speech",
+          url: "https://www.pm.gc.ca/en/news/speeches/2025/10/22/prime-ministers-live-address-canadas-plan-build-stronger-economy-advance"
+        },
+        link: {
+          text: "Canada plans to double non-US trade over the next decade",
+          url: "https://www.reuters.com/world/americas/canadas-carney-make-unusual-televised-address-budget-amid-deficit-scrutiny-2025-10-22/"
+        }
       },
       {
         date: "2025-10-07",
@@ -475,13 +461,13 @@ url: "https://www.reuters.com/world/americas/canadas-carney-make-unusual-televis
         action: "Prime Minister Mark Carney met President Donald Trump in the Oval Office.",
         sectors: "Not specified in source",
         statement: {
-text: "Trump promised trade fairness for Canada and was noncommittal on a USMCA deal",
-url: ""
-	},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/americas/canadas-carney-makes-second-white-house-visit-talk-trade-2025-10-07/"
-}
+          text: "Trump promised trade fairness for Canada and was noncommittal on a USMCA deal",
+          url: ""
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/americas/canadas-carney-makes-second-white-house-visit-talk-trade-2025-10-07/"
+        }
       },
       {
         date: "2025-09-29",
@@ -489,27 +475,27 @@ url: "https://www.reuters.com/world/americas/canadas-carney-makes-second-white-h
         action: "Trump imposed an additional 10% tariff on Canadian softwood lumber, to take effect on Oct. 14, raising total levies to more than 45% during the escalating trade war.",
         sectors: "Softwood lumber",
         statement: {
-text: "Not specified in source",
-url: ""
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Globe and Mail story",
+          url: "https://www.theglobeandmail.com/business/article-canadian-softwood-tariff-trump/"
+        }
       },
-link: {
-text: "Globe and Mail story",
-url: "https://www.theglobeandmail.com/business/article-canadian-softwood-tariff-trump/"
-}
-},
       {
         date: "2025-09-05",
         country: "Canada",
         action: "The government scrapped the EV mandate and offered a C$5 billion fund to help people in sectors impacted by tariffs, along with more measures",
         sectors: "EVs; tariff-impacted sectors not otherwise specified",
         statement: {
-text: "PM's measures on strategic industries",
-url: "https://www.pm.gc.ca/en/news/news-releases/2025/09/05/prime-minister-carney-launches-new-measures-protect-building"
-},
-link: {
-text: "Canada to give automakers a break on EV sales",
-url: "https://www.reuters.com/markets/us/canada-give-automakers-break-ev-sales-target-offers-tariff-aid-2025-09-05/"
-}
+          text: "PM's measures on strategic industries",
+          url: "https://www.pm.gc.ca/en/news/news-releases/2025/09/05/prime-minister-carney-launches-new-measures-protect-building"
+        },
+        link: {
+          text: "Canada to give automakers a break on EV sales",
+          url: "https://www.reuters.com/markets/us/canada-give-automakers-break-ev-sales-target-offers-tariff-aid-2025-09-05/"
+        }
       },
       {
         date: "2025-08-29",
@@ -517,13 +503,13 @@ url: "https://www.reuters.com/markets/us/canada-give-automakers-break-ev-sales-t
         action: "U.S. tariff exemptions for package shipments valued under USD $800 ended",
         sectors: "De-minimus - Package shipments under USD $800",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/business/end-us-low-value-package-tariff-exemption-is-permanent-trump-officials-say-2025-08-29/"
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/business/end-us-low-value-package-tariff-exemption-is-permanent-trump-officials-say-2025-08-29/"
+        }
       },
       {
         date: "2025-08-22",
@@ -531,13 +517,13 @@ url: "https://www.reuters.com/business/end-us-low-value-package-tariff-exemption
         action: "PM Carney announced the removal of all counter tariffs on the U.S. except those on steel, aluminum and autos.",
         sectors: "Steel; aluminum; autos",
         statement: {
-text: "Statement by the Prime Minister on CAN-U.S. trade",
-url: "https://www.pm.gc.ca/en/news/statements/2025/08/22/statement-prime-minister-can-us"
-},
-link: {
-text: "Canada to remove many retaliatory tariffs on US, Carney says",
-url: "https://www.reuters.com/world/americas/canada-remove-many-retaliatory-tariffs-us-carney-says-2025-08-22/"
-}
+          text: "Statement by the Prime Minister on CAN-U.S. trade",
+          url: "https://www.pm.gc.ca/en/news/statements/2025/08/22/statement-prime-minister-can-us"
+        },
+        link: {
+          text: "Canada to remove many retaliatory tariffs on US, Carney says",
+          url: "https://www.reuters.com/world/americas/canada-remove-many-retaliatory-tariffs-us-carney-says-2025-08-22/"
+        }
       },
       {
         date: "2025-08-05",
@@ -545,13 +531,13 @@ url: "https://www.reuters.com/world/americas/canada-remove-many-retaliatory-tari
         action: "Carney announced support for softwood lumber in British Columbia; the government announced C$1.2 billion in support for the industry.",
         sectors: "Softwood lumber",
         statement: {
-text: "PMO's announcement",
-url: "https://www.pm.gc.ca/en/news/news-releases/2025/08/05/prime-minister-carney-announces-new-measures-transform-canada"
-},
-link: {
-text: "Link not provided in source",
-url: ""
-}
+          text: "PMO's announcement",
+          url: "https://www.pm.gc.ca/en/news/news-releases/2025/08/05/prime-minister-carney-announces-new-measures-transform-canada"
+        },
+        link: {
+          text: "Link not provided in source",
+          url: ""
+        }
       },
       {
         date: "2025-08-01",
@@ -563,9 +549,9 @@ url: ""
           url: "https://www.pm.gc.ca/en/news/statements/2025/08/01/statement-prime-minister-carney-canada-us"
         },
         link: {
-text: "Link not provided in source",
-url: ""
-}
+          text: "Link not provided in source",
+          url: ""
+        }
       },
       {
         date: "2025-07-31",
@@ -573,13 +559,13 @@ url: ""
         action: "Trump signed an executive order hiking tariffs to 35% on Canada on products not USMCA compliant from Aug. 1, effectively increasing the fentanyl tariffs from 25% to 35%.",
         sectors: "Non-USMCA-compliant products; fentanyl-related tariffs",
         statement: {
-text: "White House Fact Sheet",
-url: "https://www.whitehouse.gov/fact-sheets/2025/07/fact-sheet-president-donald-j-trump-amends-duties-to-address-the-flow-of-illicit-drugs-across-our-northern-border/"
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/americas/trump-increases-tariff-canada-35-25-cites-fentanyl-2025-07-31/"
-}
+          text: "White House Fact Sheet",
+          url: "https://www.whitehouse.gov/fact-sheets/2025/07/fact-sheet-president-donald-j-trump-amends-duties-to-address-the-flow-of-illicit-drugs-across-our-northern-border/"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/americas/trump-increases-tariff-canada-35-25-cites-fentanyl-2025-07-31/"
+        }
       },
       {
         date: "2025-07-30",
@@ -587,13 +573,13 @@ url: "https://www.reuters.com/world/americas/trump-increases-tariff-canada-35-25
         action: "Trump said a 50% tariff on copper pipes and wiring would take effect on Aug. 1.",
         sectors: "Copper pipes; copper wiring",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/business/trump-issues-blitz-tariff-announcements-copper-brazil-south-korea-small-value-2025-07-30/"
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/business/trump-issues-blitz-tariff-announcements-copper-brazil-south-korea-small-value-2025-07-30/"
+        }
       },
       {
         date: "2025-07-26",
@@ -601,13 +587,13 @@ url: "https://www.reuters.com/business/trump-issues-blitz-tariff-announcements-c
         action: "The U.S. Commerce Department moved to raise anti-dumping duties on Canadian softwood lumber to 20.56%.",
         sectors: "Softwood lumber",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "CBC link: U.S. slaps anti-dumping duty",
-url:"https://www.cbc.ca/news/canada/british-columbia/us-hikes-softwood-lumber-duties-1.7594807"
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "CBC link: U.S. slaps anti-dumping duty",
+          url: "https://www.cbc.ca/news/canada/british-columbia/us-hikes-softwood-lumber-duties-1.7594807"
+        }
       },
       {
         date: "2025-07-16",
@@ -615,13 +601,13 @@ url:"https://www.cbc.ca/news/canada/british-columbia/us-hikes-softwood-lumber-du
         action: "Canada announced new measures to strengthen Canada’s steel industry, reducing the quota for imports from countries without free trade agreements to 50% of 2024 levels and imposing a 50% tariff on imports above the quota.",
         sectors: "Steel; foreign steel imports",
         statement: {
-text: "Prime Minister Carney announces new measures to protect and strengthen Canada’s steel industry",
-url: "https://www.pm.gc.ca/en/news/news-releases/2025/07/16/prime-minister-carney-announces-new-measures-protect-and-strength"
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/china/canada-announces-new-tariff-measures-imported-steel-protect-domestic-industry-2025-07-16/"
-}
+          text: "Prime Minister Carney announces new measures to protect and strengthen Canada’s steel industry",
+          url: "https://www.pm.gc.ca/en/news/news-releases/2025/07/16/prime-minister-carney-announces-new-measures-protect-and-strength"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/china/canada-announces-new-tariff-measures-imported-steel-protect-domestic-industry-2025-07-16/"
+        }
       },
       {
         date: "2025-07-10",
@@ -629,12 +615,12 @@ url: "https://www.reuters.com/world/china/canada-announces-new-tariff-measures-i
         action: "Trump announced 35% tariffs on Canada, to be implemented from Aug. 1, and said he was eyeing 15%-20% tariffs for others.",
         sectors: "Canadian goods; tariffs on Canada",
         statement: {
-text: "Not specified in source",
-url: ""
-},
+          text: "Not specified in source",
+          url: ""
+        },
         link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/us/trump-puts-35-tariff-canada-eyes-15-20-tariffs-others-2025-07-11/"
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/us/trump-puts-35-tariff-canada-eyes-15-20-tariffs-others-2025-07-11/"
         }
       },
       {
@@ -643,12 +629,12 @@ url: "https://www.reuters.com/world/us/trump-puts-35-tariff-canada-eyes-15-20-ta
         action: "Canada rescinded the digital services tax to advance broader trade negotiations with the United States.",
         sectors: "Digital services tax",
         statement: {
-text: "Canada scraps digital serives tax",
-url: "https://www.canada.ca/en/department-finance/news/2025/06/canada-rescinds-digital-services-tax-to-advance-broader-trade-negotiations-with-the-united-states.html"
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/americas/canada-rescinds-digital-services-tax-bid-advance-trade-talks-with-us-2025-06-30/"
+          text: "Canada scraps digital serives tax",
+          url: "https://www.canada.ca/en/department-finance/news/2025/06/canada-rescinds-digital-services-tax-to-advance-broader-trade-negotiations-with-the-united-states.html"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/americas/canada-rescinds-digital-services-tax-bid-advance-trade-talks-with-us-2025-06-30/"
         }
       },
       {
@@ -661,9 +647,9 @@ url: "https://www.reuters.com/world/americas/canada-rescinds-digital-services-ta
           url: "https://www.canada.ca/en/department-finance/news/2025/06/g7-statement-on-global-minimum-taxes.html"
         },
         link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/g7-strikes-deal-shield-us-multinationals-higher-global-taxes-ft-reports-2025-06-28/"
-}
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/g7-strikes-deal-shield-us-multinationals-higher-global-taxes-ft-reports-2025-06-28/"
+        }
       },
       {
         date: "2025-06-27",
@@ -671,13 +657,13 @@ url: "https://www.reuters.com/world/g7-strikes-deal-shield-us-multinationals-hig
         action: "Trump suspended trade talks with Canada over Canada’s Digital Services Tax, which was supposed to start collecting money from July 1.",
         sectors: "Digital services tax",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/sustainability/boards-policy-regulation/trump-says-us-ending-trade-discussions-with-canada-over-digital-tax-2025-06-27/"
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/sustainability/boards-policy-regulation/trump-says-us-ending-trade-discussions-with-canada-over-digital-tax-2025-06-27/"
+        }
       },
       {
         date: "2025-06-19",
@@ -685,13 +671,13 @@ url: "https://www.reuters.com/sustainability/boards-policy-regulation/trump-says
         action: "Canada said it would slap more tariffs on U.S. steel and aluminum if no deal was reached by July 21, and also announced measures to support those sectors.",
         sectors: "Steel; aluminum",
         statement: {
-text: "Canada government measures",
-url: "https://www.canada.ca/en/department-finance/news/2025/06/canada-bolsters-its-measures-to-protect-canadian-steel-and-aluminum-workers-and-industries.html"
-},
-link: {
-text: "Reuters story",
-url: "https://ca.finance.yahoo.com/news/canada-address-unfair-trade-steel-174731064.html?guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAKX91flSiXC11iPdRs7rOgPZ0ggHou3X08KfVY8LhRow4ydlLeSlTTklVhxF2UZikoXg5AwS8StSY14bUz1x7Y7mrjg0ififAZF715i-qya1VG90tXGWWfY4l5sGuzfxTIHFt96TsvKi7vDsVqfaxx0oTMM0XFp8uH3G_i4mMjlh&guccounter=2"
-}
+          text: "Canada government measures",
+          url: "https://www.canada.ca/en/department-finance/news/2025/06/canada-bolsters-its-measures-to-protect-canadian-steel-and-aluminum-workers-and-industries.html"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://ca.finance.yahoo.com/news/canada-address-unfair-trade-steel-174731064.html?guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAKX91flSiXC11iPdRs7rOgPZ0ggHou3X08KfVY8LhRow4ydlLeSlTTklVhxF2UZikoXg5AwS8StSY14bUz1x7Y7mrjg0ififAZF715i-qya1VG90tXGWWfY4l5sGuzfxTIHFt96TsvKi7vDsVqfaxx0oTMM0XFp8uH3G_i4mMjlh&guccounter=2"
+        }
       },
       {
         date: "2025-06-16",
@@ -699,13 +685,13 @@ url: "https://ca.finance.yahoo.com/news/canada-address-unfair-trade-steel-174731
         action: "PM Carney met President Trump at G7 Leaders’ Summit in Kananaskis, Alberta; both announced a trade deal in the next 30 days.",
         sectors: "Not specified in source",
         statement: {
-text: "PMO release",
-url: "https://www.pm.gc.ca/en/news/readouts/2025/06/16/prime-minister-carney-meets-president-united-states-donald-j-trump"
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/business/autos-transportation/trump-says-tariffs-must-be-part-any-canada-deal-ottawa-pushes-back-2025-06-16/"
-}
+          text: "PMO release",
+          url: "https://www.pm.gc.ca/en/news/readouts/2025/06/16/prime-minister-carney-meets-president-united-states-donald-j-trump"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/business/autos-transportation/trump-says-tariffs-must-be-part-any-canada-deal-ottawa-pushes-back-2025-06-16/"
+        }
       },
       {
         date: "2025-06-03",
@@ -713,13 +699,13 @@ url: "https://www.reuters.com/business/autos-transportation/trump-says-tariffs-m
         action: "U.S. hiked tariffs on steel and aluminum by 50%.",
         sectors: "Steel; aluminum",
         statement: {
-text: "White House fact sheet",
-url: "https://www.whitehouse.gov/fact-sheets/2025/06/fact-sheet-president-donald-j-trump-increases-section-232-tariffs-on-steel-and-aluminum/"
-},
-link: {
-text: "Reuters Explainer",
-url: "https://www.reuters.com/world/americas/reality-trumps-steel-aluminium-tariffs-2025-06-02/"
-}
+          text: "White House fact sheet",
+          url: "https://www.whitehouse.gov/fact-sheets/2025/06/fact-sheet-president-donald-j-trump-increases-section-232-tariffs-on-steel-and-aluminum/"
+        },
+        link: {
+          text: "Reuters Explainer",
+          url: "https://www.reuters.com/world/americas/reality-trumps-steel-aluminium-tariffs-2025-06-02/"
+        }
       },
       {
         date: "2025-05-06",
@@ -727,13 +713,13 @@ url: "https://www.reuters.com/world/americas/reality-trumps-steel-aluminium-tari
         action: "Carney visited the White House for the first time.",
         sectors: "Not specified in source",
         statement: {
-text: "Prime Minister Carney meets with President Trump",
-url: "https://www.pm.gc.ca/en/news/news-releases/2025/05/06/prime-minister-carney-meets-president-trump"
-},
- link: {
-text: "Carney stressed Canada will never be for sale in his first meeting with Trump",
-url: "https://www.reuters.com/world/us/carney-meets-trump-bid-reset-strained-canada-us-relations-2025-05-06/"
-      }
+          text: "Prime Minister Carney meets with President Trump",
+          url: "https://www.pm.gc.ca/en/news/news-releases/2025/05/06/prime-minister-carney-meets-president-trump"
+        },
+        link: {
+          text: "Carney stressed Canada will never be for sale in his first meeting with Trump",
+          url: "https://www.reuters.com/world/us/carney-meets-trump-bid-reset-strained-canada-us-relations-2025-05-06/"
+        }
       },
       {
         date: "2025-04-29",
@@ -741,11 +727,11 @@ url: "https://www.reuters.com/world/us/carney-meets-trump-bid-reset-strained-can
         action: "Trump signed an order to remove tariffs on auto parts after industry pressure.",
         sectors: "Auto parts",
         statement: {
-text: "White House statement",
-url: "https://www.whitehouse.gov/presidential-actions/2025/04/amendments-to-adjusting-imports-of-automobiles-and-automobile-parts-into-the-united-states/"
-},
-link: {
-text: "Reuters story",
+          text: "White House statement",
+          url: "https://www.whitehouse.gov/presidential-actions/2025/04/amendments-to-adjusting-imports-of-automobiles-and-automobile-parts-into-the-united-states/"
+        },
+        link: {
+          text: "Reuters story",
           url: "https://www.reuters.com/business/autos-transportation/trump-reduce-impact-auto-tariffs-officials-say-2025-04-28/"
         }
       },
@@ -755,13 +741,13 @@ text: "Reuters story",
         action: "Canada’s retaliatory tariffs on U.S. autos took effect.",
         sectors: "Autos",
         statement: {
-text: "Government's list of tariff items",
-url: "https://www.canada.ca/en/department-finance/news/2025/04/list-of-vehicle-products-from-the-united-states-subject-to-25-per-cent-tariffs-effective-april-9-2025.html"
-},
-link: {
-text: "Link not provided in source",
-url: ""
-}
+          text: "Government's list of tariff items",
+          url: "https://www.canada.ca/en/department-finance/news/2025/04/list-of-vehicle-products-from-the-united-states-subject-to-25-per-cent-tariffs-effective-april-9-2025.html"
+        },
+        link: {
+          text: "Link not provided in source",
+          url: ""
+        }
       },
       {
         date: "2025-04-03",
@@ -769,13 +755,13 @@ url: ""
         action: "Canada imposed 25% tariffs on non-CUSMA-compliant vehicles imported into Canada from the United States, and on non-Canadian and non-Mexican content of CUSMA-compliant vehicles imported into Canada from the United States",
         sectors: "Vehicles; automobiles",
         statement: {
-text: "Government's counter measures",
-url: "https://www.pm.gc.ca/en/news/news-releases/2025/04/03/canada-announces-new-countermeasures-response-tariffs-from-united-states"
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/world/americas/canada-impose-25-tariffs-us-autos-that-are-non-compliant-with-usmca-says-carney-2025-04-03/"
-}
+          text: "Government's counter measures",
+          url: "https://www.pm.gc.ca/en/news/news-releases/2025/04/03/canada-announces-new-countermeasures-response-tariffs-from-united-states"
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/world/americas/canada-impose-25-tariffs-us-autos-that-are-non-compliant-with-usmca-says-carney-2025-04-03/"
+        }
       },
       {
         date: "2025-04-02",
@@ -783,27 +769,27 @@ url: "https://www.reuters.com/world/americas/canada-impose-25-tariffs-us-autos-t
         action: "Tariffs on automobiles came into effect.",
         sectors: "Automobiles",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Link not provided in source",
-url: ""
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Link not provided in source",
+          url: ""
+        }
       },
-{
+      {
         date: "2025-04-02",
         country: "United States",
         action: "Liberation Day global tariffs",
         sectors: "Automobiles",
         statement: {
-text: "White House notice",
-url: "https://www.whitehouse.gov/fact-sheets/2025/04/fact-sheet-president-donald-j-trump-declares-national-emergency-to-increase-our-competitive-edge-protect-our-sovereignty-and-strengthen-our-national-and-economic-security/#:~:text=Using%20his%20IEEPA%20authority%2C%20President,subject%20to%20the%20Reciprocal%20Tariff."
-},
-link: {
-text: "Reuters video",
-url: "https://www.reuters.com/video/watch/idRW372702042025RP1/"
-}
+          text: "White House notice",
+          url: "https://www.whitehouse.gov/fact-sheets/2025/04/fact-sheet-president-donald-j-trump-declares-national-emergency-to-increase-our-competitive-edge-protect-our-sovereignty-and-strengthen-our-national-and-economic-security/#:~:text=Using%20his%20IEEPA%20authority%2C%20President,subject%20to%20the%20Reciprocal%20Tariff."
+        },
+        link: {
+          text: "Reuters video",
+          url: "https://www.reuters.com/video/watch/idRW372702042025RP1/"
+        }
       },
       {
         date: "2025-03-26",
@@ -811,13 +797,13 @@ url: "https://www.reuters.com/video/watch/idRW372702042025RP1/"
         action: "Trump signed an executive order to impose 25% tariffs on all automobile imports to the United States, to be implemented from April 2. For automobiles imported under CUSMA, only the value of content not made in the United States would be tariffed.",
         sectors: "Automobiles",
         statement: {
-text: "White House notice",
-url: "https://www.whitehouse.gov/presidential-actions/2025/03/adjusting-imports-of-automobiles-and-autombile-parts-into-the-united-states/"
-},
-link: {
-text: "What's in Trump's new tariff",
-url: "https://www.reuters.com/business/autos-transportation/whats-trumps-new-25-tariffs-us-auto-imports-2025-03-27/"
-}
+          text: "White House notice",
+          url: "https://www.whitehouse.gov/presidential-actions/2025/03/adjusting-imports-of-automobiles-and-autombile-parts-into-the-united-states/"
+        },
+        link: {
+          text: "What's in Trump's new tariff",
+          url: "https://www.reuters.com/business/autos-transportation/whats-trumps-new-25-tariffs-us-auto-imports-2025-03-27/"
+        }
       },
       {
         date: "2025-03-13",
@@ -825,13 +811,13 @@ url: "https://www.reuters.com/business/autos-transportation/whats-trumps-new-25-
         action: "Canada imposed 25% reciprocal tariffs on products totalling $29.8 billion.",
         sectors: "Steel; aluminum; tools; computers and servers; display monitors; sport equipment; cast-iron products",
         statement: {
-text: "List of products to attract duties",
-url: "https://www.canada.ca/en/department-finance/news/2025/03/list-of-products-from-the-united-states-subject-to-25-per-cent-tariffs-effective-march-13-2025.html"
-},
-link: {
-text: "Canada announces C$29.8 billion in retaliatory tariffs on US",
-url: "https://www.reuters.com/world/americas/canada-announce-c298-bln-retaliatory-tariffs-us-2025-03-12/"
-}
+          text: "List of products to attract duties",
+          url: "https://www.canada.ca/en/department-finance/news/2025/03/list-of-products-from-the-united-states-subject-to-25-per-cent-tariffs-effective-march-13-2025.html"
+        },
+        link: {
+          text: "Canada announces C$29.8 billion in retaliatory tariffs on US",
+          url: "https://www.reuters.com/world/americas/canada-announce-c298-bln-retaliatory-tariffs-us-2025-03-12/"
+        }
       },
       {
         date: "2025-03-12",
@@ -839,13 +825,13 @@ url: "https://www.reuters.com/world/americas/canada-announce-c298-bln-retaliator
         action: "U.S. tariffs on steel and aluminum went into effect on other countries and Canada.",
         sectors: "Steel; aluminum",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "U.S. tariffs come into effect, Ontario scraps plan to impose energy surcharge",
-url: "https://www.reuters.com/world/americas/ontario-premier-says-he-will-not-back-down-till-trumps-tariffs-are-gone-2025-03-11/"
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "U.S. tariffs come into effect, Ontario scraps plan to impose energy surcharge",
+          url: "https://www.reuters.com/world/americas/ontario-premier-says-he-will-not-back-down-till-trumps-tariffs-are-gone-2025-03-11/"
+        }
       },
       {
         date: "2025-03-10",
@@ -853,13 +839,13 @@ url: "https://www.reuters.com/world/americas/ontario-premier-says-he-will-not-ba
         action: "Ontario imposed a 25% surcharge on energy sold to the U.S., primarily to three states; on March 11, Ford suspended the surcharge after meeting with Lutnick.",
         sectors: "Energy",
         statement: {
-text: "Ontario Government's announcement",
-url: "https://news.ontario.ca/en/release/1005690/ontario-applies-25-per-cent-surcharge-on-electricity-exports-to-united-states"
-},
-link: {
-text: "Ontario imposes 25% surcharge on electricity exports to US",
-url: "https://www.reuters.com/business/energy/ontario-imposes-25-surcharge-electricity-exports-us-2025-03-10/"
-}
+          text: "Ontario Government's announcement",
+          url: "https://news.ontario.ca/en/release/1005690/ontario-applies-25-per-cent-surcharge-on-electricity-exports-to-united-states"
+        },
+        link: {
+          text: "Ontario imposes 25% surcharge on electricity exports to US",
+          url: "https://www.reuters.com/business/energy/ontario-imposes-25-surcharge-electricity-exports-us-2025-03-10/"
+        }
       },
       {
         date: "2025-03-06",
@@ -867,13 +853,13 @@ url: "https://www.reuters.com/business/energy/ontario-imposes-25-surcharge-elect
         action: "The U.S. exempted imports compliant with USMCA/CUSMA from tariffs; Canada dropped retaliation.",
         sectors: "USMCA/CUSMA-compliant imports",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Trump delays tariffs on goods",
-url: "https://www.reuters.com/business/tariff-reprieve-likely-be-extended-all-usmca-compliant-goods-lutnick-says-2025-03-06/"
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Trump delays tariffs on goods",
+          url: "https://www.reuters.com/business/tariff-reprieve-likely-be-extended-all-usmca-compliant-goods-lutnick-says-2025-03-06/"
+        }
       },
       {
         date: "2025-03-05",
@@ -881,13 +867,13 @@ url: "https://www.reuters.com/business/tariff-reprieve-likely-be-extended-all-us
         action: "Some Canadian provinces removed U.S. alcohol from shelves.",
         sectors: "U.S. alcohol",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Link not provided in source",
-url: ""
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Link not provided in source",
+          url: ""
+        }
       },
       {
         date: "2025-03-04",
@@ -895,13 +881,13 @@ url: ""
         action: "U.S. tariffs took effect: 25% on Canadian exports and 10% on Canadian energy product exports. Canada retaliated with tariffs on $30 billion in goods imported from the U.S.",
         sectors: "Canadian exports; energy products; orange juice; peanut butter; wine; spirits; beer; coffee; appliances; apparel; footwear; motorcycles; cosmetics; certain paper products",
         statement: {
-text: "Complete list of U.S. products subject to counter tariffs",
-url: "https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs/complete-list-us-products-subject-to-counter-tariffs.html"
-},
-link: {
-text: "Canada retaliates",
-url: "https://www.reuters.com/world/americas/canadas-retaliatory-tariffs-us-goods-start-tuesday-pm-trudeau-says-2025-03-04/"
-}
+          text: "Complete list of U.S. products subject to counter tariffs",
+          url: "https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs/complete-list-us-products-subject-to-counter-tariffs.html"
+        },
+        link: {
+          text: "Canada retaliates",
+          url: "https://www.reuters.com/world/americas/canadas-retaliatory-tariffs-us-goods-start-tuesday-pm-trudeau-says-2025-03-04/"
+        }
       },
       {
         date: "2025-02-10",
@@ -909,13 +895,13 @@ url: "https://www.reuters.com/world/americas/canadas-retaliatory-tariffs-us-good
         action: "President Donald Trump signed two executive orders imposing a 25% tariff, starting March 12, 2025, on imports of steel and aluminum products from all countries, including Canada.",
         sectors: "Steel; aluminum",
         statement: {
-text: "Orders cited 'national security' and said they were meant to protect and revitalize U.S. domestic steel and aluminum industries and achieve 'sustainable capacity utilization of at least 80%.'",
-url: ""
-},
-link: {
-text: "Reuters story",
-url: "https://www.reuters.com/markets/asian-eu-steelmakers-shares-fall-after-trump-escalates-tariffs-2025-02-10/"
-}
+          text: "Orders cited 'national security' and said they were meant to protect and revitalize U.S. domestic steel and aluminum industries and achieve 'sustainable capacity utilization of at least 80%.'",
+          url: ""
+        },
+        link: {
+          text: "Reuters story",
+          url: "https://www.reuters.com/markets/asian-eu-steelmakers-shares-fall-after-trump-escalates-tariffs-2025-02-10/"
+        }
       },
       {
         date: "2025-02-03",
@@ -923,28 +909,28 @@ url: "https://www.reuters.com/markets/asian-eu-steelmakers-shares-fall-after-tru
         action: "Tariffs on Canada were paused for 30 days; Canada paused retaliation",
         sectors: "Not specified in source",
         statement: {
-text: "Not specified in source",
-url: ""
-},
-link: {
-text: "Link not provided in source",
-url: ""
-}
+          text: "Not specified in source",
+          url: ""
+        },
+        link: {
+          text: "Link not provided in source",
+          url: ""
+        }
       },
-     {
-  date: "2025-02-01",
-  country: "United States; Canada",
-  action: "U.S. set 10% tariffs on Canadian goods to take effect from Feb. 4; Trudeau held a press conference on retaliatory measures.",
-  sectors: "Canadian goods",
-  statement: {
-    text: "Canada's retaliatory measures",
-    url: "https://www.canada.ca/en/department-finance/news/2025/02/canada-announces-155b-tariff-package-in-response-to-unjustified-us-tariffs.html"
-  },
-  link: {
-    text: "Trudeau press conference on retaliatory measures",
-    url: "https://www.reuters.com/world/americas/canadas-trudeau-announces-counter-tariffs-2025-02-02/"
-  }
-}
+      {
+        date: "2025-02-01",
+        country: "United States; Canada",
+        action: "U.S. set 10% tariffs on Canadian goods to take effect from Feb. 4; Trudeau held a press conference on retaliatory measures.",
+        sectors: "Canadian goods",
+        statement: {
+          text: "Canada's retaliatory measures",
+          url: "https://www.canada.ca/en/department-finance/news/2025/02/canada-announces-155b-tariff-package-in-response-to-unjustified-us-tariffs.html"
+        },
+        link: {
+          text: "Trudeau press conference on retaliatory measures",
+          url: "https://www.reuters.com/world/americas/canadas-trudeau-announces-counter-tariffs-2025-02-02/"
+        }
+      }
     ];
 
     const searchInput = document.getElementById("searchInput");
@@ -962,7 +948,7 @@ url: ""
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;")
+        .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
 
@@ -1016,18 +1002,18 @@ url: ""
       return Array.from(set).sort((a, b) => a.localeCompare(b));
     }
 
-function getUniqueYears(events) {
-  const set = new Set();
-  events.forEach(event => {
-    if (event.date) {
-      const year = event.date.split("-")[0];
-      set.add(year);
+    function getUniqueYears(events) {
+      const set = new Set();
+      events.forEach(event => {
+        if (event.date) {
+          const year = event.date.split("-")[0];
+          set.add(year);
+        }
+      });
+      return Array.from(set).sort((a, b) => b - a);
     }
-  });
-  return Array.from(set).sort((a, b) => b - a);
-}
-    
-function populateFilters() {
+
+    function populateFilters() {
       getUniqueCountries(tariffEvents).forEach(country => {
         const option = document.createElement("option");
         option.value = country;
@@ -1042,13 +1028,13 @@ function populateFilters() {
         sectorFilter.appendChild(option);
       });
 
-getUniqueYears(tariffEvents).forEach(year => {
-  const option = document.createElement("option");
-  option.value = year;
-  option.textContent = year;
-  yearFilter.appendChild(option);
-});
-}
+      getUniqueYears(tariffEvents).forEach(year => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      });
+    }
 
     function matchesCountry(event, selectedCountry) {
       if (selectedCountry === "all") return true;
@@ -1063,10 +1049,10 @@ getUniqueYears(tariffEvents).forEach(year => {
       return normalizePieces(event.sectors).includes(selectedSector);
     }
 
-function matchesYear(event, selectedYear) {
-  if (selectedYear === "all") return true;
-  return event.date.startsWith(selectedYear);
-}
+    function matchesYear(event, selectedYear) {
+      if (selectedYear === "all") return true;
+      return event.date.startsWith(selectedYear);
+    }
 
     function matchesSearch(event, query) {
       if (!query) return true;
@@ -1096,7 +1082,7 @@ function matchesYear(event, selectedYear) {
         return (
           matchesCountry(event, selectedCountry) &&
           matchesSector(event, selectedSector) &&
-          matchesYear(event, selectedYear) &&          
+          matchesYear(event, selectedYear) &&
           matchesSearch(event, query)
         );
       });
@@ -1163,7 +1149,7 @@ function matchesYear(event, selectedYear) {
       searchInput.value = "";
       countryFilter.value = "all";
       sectorFilter.value = "all";
-      yearFilter.value = "all";      
+      yearFilter.value = "all";
       renderEvents();
     }
 
@@ -1290,7 +1276,7 @@ function matchesYear(event, selectedYear) {
     searchInput.addEventListener("input", renderEvents);
     countryFilter.addEventListener("change", renderEvents);
     sectorFilter.addEventListener("change", renderEvents);
-    yearFilter.addEventListener("change", renderEvents);    
+    yearFilter.addEventListener("change", renderEvents);
     resetBtn.addEventListener("click", resetFilters);
     downloadCsvBtn.addEventListener("click", downloadCsv);
     downloadWordBtn.addEventListener("click", downloadWord);
