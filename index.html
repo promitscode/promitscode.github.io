@@ -274,7 +274,18 @@
       color: var(--muted);
       font-size: 13px;
     }
+.tracker-context {
+  max-width: 700px;
+  margin: 10px auto 10px auto;
+  font-size: 15px;
+  color: #555;
+}
 
+.last-updated {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 14px;
+}
     @media (max-width: 880px) {
       .controls { grid-template-columns: 1fr; }
       .detail-row { grid-template-columns: 1fr; gap: 4px; }
@@ -289,9 +300,17 @@
     <header>
       <div class="eyebrow">Policy timeline</div>
       <h1>Canada–U.S. Tariff Tracker</h1>
-      <p class="intro">
-        A clean, searchable timeline of tariff-related actions, retaliation, official statements, and trade-policy developments involving Canada and the United States.
-      </p>
+<p class="tracker-context">
+A timeline of tariff actions, retaliation measures and trade policy developments between Canada and the United States.
+</p>
+
+<p class="last-updated">
+Last updated: March 2026
+</p>
+
+<p class="intro">
+A clean, searchable timeline of tariff-related actions, retaliation, official statements, and trade-policy developments involving Canada and the United States.
+</p>
     </header>
 
     <section class="controls">
@@ -313,6 +332,12 @@
           <option value="all">All sectors</option>
         </select>
       </div>
+<div class="control">
+<label for="yearFilter">Year</label>
+<select id="yearFilter">
+<option value="all">All years</option>
+</select>
+</div>
     </section>
 
     <div class="action-row">
@@ -925,6 +950,7 @@ url: ""
     const searchInput = document.getElementById("searchInput");
     const countryFilter = document.getElementById("countryFilter");
     const sectorFilter = document.getElementById("sectorFilter");
+    const yearFilter = document.getElementById("yearFilter");
     const resetBtn = document.getElementById("resetBtn");
     const downloadCsvBtn = document.getElementById("downloadCsvBtn");
     const downloadWordBtn = document.getElementById("downloadWordBtn");
@@ -990,7 +1016,18 @@ url: ""
       return Array.from(set).sort((a, b) => a.localeCompare(b));
     }
 
-    function populateFilters() {
+function getUniqueYears(events) {
+  const set = new Set();
+  events.forEach(event => {
+    if (event.date) {
+      const year = event.date.split("-")[0];
+      set.add(year);
+    }
+  });
+  return Array.from(set).sort((a, b) => b - a);
+}
+    
+function populateFilters() {
       getUniqueCountries(tariffEvents).forEach(country => {
         const option = document.createElement("option");
         option.value = country;
@@ -1004,7 +1041,14 @@ url: ""
         option.textContent = sector;
         sectorFilter.appendChild(option);
       });
-    }
+
+getUniqueYears(tariffEvents).forEach(year => {
+  const option = document.createElement("option");
+  option.value = year;
+  option.textContent = year;
+  yearFilter.appendChild(option);
+});
+}
 
     function matchesCountry(event, selectedCountry) {
       if (selectedCountry === "all") return true;
@@ -1018,6 +1062,11 @@ url: ""
       if (selectedSector === "all") return true;
       return normalizePieces(event.sectors).includes(selectedSector);
     }
+
+function matchesYear(event, selectedYear) {
+  if (selectedYear === "all") return true;
+  return event.date.startsWith(selectedYear);
+}
 
     function matchesSearch(event, query) {
       if (!query) return true;
@@ -1041,11 +1090,13 @@ url: ""
       const query = searchInput.value.trim();
       const selectedCountry = countryFilter.value;
       const selectedSector = sectorFilter.value;
+      const selectedYear = yearFilter.value;
 
       return sortNewestFirst(tariffEvents).filter(event => {
         return (
           matchesCountry(event, selectedCountry) &&
           matchesSector(event, selectedSector) &&
+          matchesYear(event, selectedYear) &&          
           matchesSearch(event, query)
         );
       });
@@ -1112,6 +1163,7 @@ url: ""
       searchInput.value = "";
       countryFilter.value = "all";
       sectorFilter.value = "all";
+      yearFilter.value = "all";      
       renderEvents();
     }
 
@@ -1238,6 +1290,7 @@ url: ""
     searchInput.addEventListener("input", renderEvents);
     countryFilter.addEventListener("change", renderEvents);
     sectorFilter.addEventListener("change", renderEvents);
+    yearFilter.addEventListener("change", renderEvents);    
     resetBtn.addEventListener("click", resetFilters);
     downloadCsvBtn.addEventListener("click", downloadCsv);
     downloadWordBtn.addEventListener("click", downloadWord);
